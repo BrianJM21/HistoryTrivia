@@ -57,13 +57,12 @@ class AddQuestionViewController: UIViewController {
         }
     }
     
-    var viewHeight: Double = 0.0
+    lazy var viewHeight: Double = self.view.frame.size.height
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setupView()
-        self.viewHeight = self.view.frame.size.height
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -79,9 +78,9 @@ class AddQuestionViewController: UIViewController {
         }
     }
     
-    @objc func keyboardWillHide(notificacion: NSNotification) {
+    @objc func keyboardWillHide(notification: NSNotification) {
         
-        if let keyboardSize = (notificacion.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             
             if self.viewHeight != self.view.frame.size.height {
                 
