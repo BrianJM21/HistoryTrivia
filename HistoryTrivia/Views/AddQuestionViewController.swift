@@ -57,10 +57,37 @@ class AddQuestionViewController: UIViewController {
         }
     }
     
+    var viewHeight: Double = 0.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setupView()
+        self.viewHeight = self.view.frame.size.height
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            
+            if self.viewHeight == self.view.frame.size.height {
+                
+                self.view.frame.size.height -= keyboardSize.height
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notificacion: NSNotification) {
+        
+        if let keyboardSize = (notificacion.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            
+            if self.viewHeight != self.view.frame.size.height {
+                
+                self.view.frame.size.height += keyboardSize.height
+            }
+        }
     }
     
     func setupView() {
@@ -95,6 +122,7 @@ class AddQuestionViewController: UIViewController {
     
     @IBAction func addQuestionButtonAction(_ sender: Any) {
         
+        self.view.endEditing(true)
         for textField in self.textFields {
             
             guard !textField.text!.isEmpty else {
